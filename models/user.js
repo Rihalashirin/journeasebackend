@@ -58,8 +58,11 @@ const userSchema=new Schema({
     information:{
         type:String
     },
+    address:{
+        type:String
+    },
     
-    LocationExpertise:{
+    locationExpertise:{
         type:String
     },
     experienceYears:{

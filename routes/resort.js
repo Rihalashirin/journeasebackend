@@ -1,5 +1,6 @@
 import express from "express";
 import Facility from "../models/facilities.js";
+import { User } from "../models/user.js";
 const router=express()
 
 router.post('/facilities',async(req,res)=>{
@@ -10,6 +11,16 @@ router.post('/facilities',async(req,res)=>{
     res.json(response)
     
 })
+
+router.post('/room',async(req,res)=>{
+    console.log(req.body);
+    const newRoom = new room(req.body)
+    const savedPackage = await newRoom.save()
+    res.json({message:"package created",data:savedPackage})
+}
+)
+
+
 router.get('/resortviewprofile/:id',async(req,res)=>{
     let id=req.params.id
     console.log(id);

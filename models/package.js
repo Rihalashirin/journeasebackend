@@ -1,6 +1,11 @@
 import mongoose,{ Schema,model} from "mongoose";
+import { User } from "./user.js";
 
-const packageagencySchema=Schema({
+const packageagencySchema=new Schema({
+agencyid:{
+        type:mongoose.Types.ObjectId,
+        ref:User,
+    },
 packageName:{
     type:String,
 },
@@ -25,6 +30,7 @@ basicDescription:{
 detailedDescription:{
     type:String,
 },
+
 
     
 })

@@ -3,9 +3,10 @@ import { User } from "../models/user.js";
 const router= express.Router()
 import { upload } from '../multer.js'
 
-        router.post('/registration',upload.fields([{name:'idProof'},{name:'licenseProof'},{name:'image'},{name:'coverImage'},{name:'companyLogo'}]), async(req,res)=>{
+
+
+router.post('/registration',upload.fields([{name:'idProof'},{name:'licenseProof'},{name:'image'},{name:'coverImage'},{name:'companyLogo'}]), async(req,res)=>{
     try{
-        console.log(req.files)
 
         if(req.files['idProof']){
             
@@ -62,7 +63,7 @@ let response=await User.findById(id)
 console.log(response);
 res.json(response)
 })
-router.put('/editprofile/:id',upload.single("companyLogo"),async(req,res)=>{
+router.put('/editprofile/:id',async(req,res)=>{
     let id=req.params.id
     console.log(req.body);
     let response=await User.findByIdAndUpdate(id,req.body)
