@@ -1,4 +1,5 @@
 import mongoose,{Schema,model} from "mongoose"
+import { User } from "./user.js"
 
 const facilitySchema=Schema({
   
@@ -11,8 +12,9 @@ const facilitySchema=Schema({
     name:{
       type:String
     },
-    userid:{
-    type:mongoose.Types.ObjectId
+    resortid:{
+    type:mongoose.Types.ObjectId,
+    ref:User,
     }
   
    // spa:{

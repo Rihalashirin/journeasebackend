@@ -1,4 +1,5 @@
 import mongoose,{ Schema,model} from "mongoose";
+import { User } from "./user.js";
 
 const roomSchema= new Schema({
     luxury:{
@@ -25,6 +26,13 @@ const roomSchema= new Schema({
     images:{
         type:String
     },
+    image:{
+        type:String
+    },
+    resortid:{
+        type:mongoose.Types.ObjectId,
+        ref:User
+    }
 
 })
 const room=model('room',roomSchema)

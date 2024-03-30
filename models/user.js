@@ -49,6 +49,12 @@ const userSchema=new Schema({
     description:{
         type:String
     },
+    aboutUs:{
+        type:String
+    },
+    events:{
+        type:String
+    },
     licenseProof:{
         type:String
     },

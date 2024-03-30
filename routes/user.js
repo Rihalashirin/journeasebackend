@@ -2,6 +2,7 @@ import express from "express";
 import { User } from "../models/user.js";
 const router= express.Router()
 import { upload } from '../multer.js'
+import packageagency from "../models/package.js";
 
 
 
@@ -69,5 +70,16 @@ router.put('/editprofile/:id',async(req,res)=>{
     let response=await User.findByIdAndUpdate(id,req.body)
     console.log(response);
 })
+router.get('/findpackage',async(req,res)=>{
+    let response=await User.find({userType:'agency'})
+    let pkgagency=await packageagency.find({agencyid: response._id})
+    res.json({response,pkgagency})
+    console.log(response)
+})
+router.get('/findadventure',async(req,res)=>{
+    
+    console.log(response)
+})
+
 
 export default router

@@ -1,5 +1,10 @@
 import mongoose, {Schema,model} from "mongoose";
+import { User } from "./user.js";
 const adventureSchema=Schema({
+    agencyid:{
+        type:mongoose.Types.ObjectId,
+        ref:User,
+    },
     adventureName:{
       type:String,
     },

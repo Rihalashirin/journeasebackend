@@ -8,6 +8,7 @@ agencyid:{
     },
 packageName:{
     type:String,
+    required:true
 },
 coverImage:{
     type:String,
@@ -29,6 +30,9 @@ basicDescription:{
 },
 detailedDescription:{
     type:String,
+},
+price:{
+    type:Number,
 },
 
 
