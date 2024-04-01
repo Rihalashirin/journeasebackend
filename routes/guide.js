@@ -1,5 +1,5 @@
 import express from "express";
-import { User } from "../models/user.js";
+import  User  from "../models/user.js";
 import imagesguide from "../models/image.js";
 import { upload } from "../multer.js";
 import Issue from "../models/issues.js";

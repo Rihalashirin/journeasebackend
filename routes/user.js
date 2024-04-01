@@ -1,5 +1,5 @@
 import express from "express";
-import { User } from "../models/user.js";
+import  User  from "../models/user.js";
 const router= express.Router()
 import { upload } from '../multer.js'
 import packageagency from "../models/package.js";
@@ -57,25 +57,35 @@ router.post('/login',async(req,res)=>{
     console.log(user);
     res.json(user)
 })
-router.get('/viewprofile/:id',async(req,res)=>{
-let id=req.params.id
-console.log(id);
-let response=await User.findById(id)
-console.log(response);
-res.json(response)
+
+
+
+router.get('/findpackage',async(req,res)=>{
+    let pkgagency=await packageagency.find()
+    let responseData=[]
+ for (let x of pkgagency){
+    let Agencies=await User.findById(x.agencyid)
+    responseData.push({
+        package:x,
+        agency:Agencies
+    })
+ }
+    res.json(responseData)
 })
-router.put('/editprofile/:id',async(req,res)=>{
+
+router.get('/detailvwpackage/:id',async(req,res)=>{
     let id=req.params.id
-    console.log(req.body);
-    let response=await User.findByIdAndUpdate(id,req.body)
+    console.log(id);
+    let response=await packageagency.findById(id)
+    let agency=await User.findById(response.agencyid)
+    res.json({response,agency})
     console.log(response);
 })
-router.get('/findpackage',async(req,res)=>{
-    let response=await User.find({userType:'agency'})
-    let pkgagency=await packageagency.find({agencyid: response._id})
-    res.json({response,pkgagency})
-    console.log(response)
+router.get('/vwaccomodation',async(req,res)=>{
+    
 })
+
+
 router.get('/findadventure',async(req,res)=>{
     
     console.log(response)

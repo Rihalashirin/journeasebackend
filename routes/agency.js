@@ -1,6 +1,6 @@
 import express, { response } from "express";
 import packageagency from "../models/package.js";
-import { User } from "../models/user.js";
+import  User  from "../models/user.js";
 import { upload } from '../multer.js'
 import adventureagency from "../models/adventure.js";
 import room from "../models/room.js";
@@ -156,6 +156,10 @@ router.get('/detailguide/:id',async(req,res)=>{
         res.json(e)
     }
 })
+router.post('enquireguide',async(req,res)=>{
+    console.log(req.body)
+    
+})
 router.put('/editpackage/:id',upload.fields([{name:'coverImage'}]),async(req,res)=>{
     try{
         if(req.files['coverImage']){
@@ -169,10 +173,50 @@ router.put('/editpackage/:id',upload.fields([{name:'coverImage'}]),async(req,res
         console.log(response)
     }
     catch(e){
-        res.json(e.message)
+        res.json(e)
     }
+
+
 
 })
 
+router.put('/addresortToPackage/:id',async (req,res)=>{
+    console.log(req.body);
+    let id=req.params.id
+    let response=await packageagency.findByIdAndUpdate(id,req.body)
+    console.log(response);
+
+
+    })
+router.put('/addAdventuretoPackage/:id',async(req,res)=>{
+    console.log(req.body);
+    let id=req.params.id
+    let response=await adventureagency.findByIdAndUpdate(id,req.body)
+    console.log(response)
+})
+
+    router.get('/viewPackageResort/:id',async(req,res)=>{
+        try{
+        let id=req.params.id
+        console.log(req.body)
+        let response=await packageagency.findById(id)
+        console.log(response,'sda');
+        let responseData=[]
+        for (let x of response.resortId){
+
+            let myresorts=await User.findById(x)
+            console.log(myresorts);
+            responseData.push({
+                resorts:myresorts
+            })
+            
+        }
+        // console.log(response)
+        res.json(responseData)
+        }
+        catch(e){
+            res.json(e)
+        }
+    })
 
 export default router

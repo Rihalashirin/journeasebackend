@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import cors from 'cors'
 
 
-
+import adminRouter from './routes/admin.js'
 import userRouter from './routes/user.js'
 import resortRouter from './routes/resort.js'
 import agencyRouter from './routes/agency.js'
@@ -25,6 +25,7 @@ app.use('/user',userRouter)
 app.use('/resort',resortRouter)
 app.use('/agency',agencyRouter)
 app.use('/guide',guideRouter)
+app.use('/admin',adminRouter)
 
 
 app.listen(4000)

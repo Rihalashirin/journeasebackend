@@ -1,5 +1,5 @@
 import mongoose,{ Schema,model} from "mongoose";
-import { User } from "./user.js";
+import  User  from "./user.js";
 
 const packageagencySchema=new Schema({
 agencyid:{
@@ -34,8 +34,13 @@ detailedDescription:{
 price:{
     type:Number,
 },
+resortId:[{
+    type:mongoose.Types.ObjectId,
+    ref:User
 
+}]
 
+  
     
 })
 const packageagency=model('package',packageagencySchema)

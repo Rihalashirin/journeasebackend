@@ -52,6 +52,9 @@ const userSchema=new Schema({
     aboutUs:{
         type:String
     },
+    whyUs:{
+        type:String
+    },
     events:{
         type:String
     },
@@ -120,5 +123,10 @@ const userSchema=new Schema({
     userType:{
         type:String,
     },
+    status:{
+        type:String,
+        default:'pending'
+    }
 })
-export const User = model('user',userSchema)
+ const User = model('user',userSchema)
+ export default User

@@ -1,6 +1,6 @@
 import express from "express";
 import Facility from "../models/facilities.js";
-import { User } from "../models/user.js";
+import User  from "../models/user.js";
 import room from "../models/room.js";
 import { upload } from "../multer.js";
 const router=express()

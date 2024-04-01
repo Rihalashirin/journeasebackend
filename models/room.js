@@ -1,5 +1,5 @@
 import mongoose,{ Schema,model} from "mongoose";
-import { User } from "./user.js";
+import  User  from "./user.js";
 
 const roomSchema= new Schema({
     luxury:{
