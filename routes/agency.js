@@ -219,4 +219,29 @@ router.put('/addAdventuretoPackage/:id',async(req,res)=>{
         }
     })
 
+    router.get('/viewPackageAdventure/:id',async(req,res)=>{
+        try{
+        let id=req.params.id
+        console.log(req.body)
+        let response=await packageagency.findById(id)
+        console.log(response,'sda');
+        let responseData=[]
+        for (let x of response.resortId){
+
+            let myresorts=await User.findById(x)
+            console.log(myresorts);
+            responseData.push({
+                resorts:myresorts
+            })
+            
+        }
+        // console.log(response)
+        res.json(responseData)
+        }
+        catch(e){
+            res.json(e)
+        }
+    })
+
+
 export default router

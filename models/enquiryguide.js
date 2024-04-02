@@ -14,6 +14,7 @@ const enquiryguideSchema=Schema({
         type:String,
         default:'pending'
     }
+    
 })
 let enquiryguide=model('enquiryguide',enquiryguideSchema)
 export default enquiryguide
