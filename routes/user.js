@@ -3,6 +3,7 @@ import  User  from "../models/user.js";
 const router= express.Router()
 import { upload } from '../multer.js'
 import packageagency from "../models/package.js";
+import booking from "../models/booking.js";
 
 
 
@@ -81,15 +82,65 @@ router.get('/detailvwpackage/:id',async(req,res)=>{
     res.json({response,agency})
     console.log(response);
 })
-router.get('/vwaccomodation',async(req,res)=>{
-    
+router.get('/vwaccomodation/:id',async(req,res)=>{
+    let id=req.params.id
+
+    console.log(id)
+    let responseData=[]
+    let pkgagency=await packageagency.findById(id)
+    for (let x of pkgagency.resortId){
+       let resort=await User.findById(x)
+       responseData.push({
+           package:x,
+           resort:resort
+       })
+    }
+       res.json(responseData)
+   
+
 })
+router.get('/detailvwresort/:id',async(req,res)=>{
+    let id=req.params.id
+    console.log(id)
+    let response=await User.findById(id)
+    let rooms=await room.find({resortid: response._id})
+    let facilities=await Facility.find({resortid:response._id})
 
-
-router.get('/findadventure',async(req,res)=>{
-    
+    res.json({response,rooms,facilities})
     console.log(response)
 })
+
+router.post('/booking',async(req,res)=>{
+    try{
+
+    
+    console.log(req.body);
+    const newBooking = new booking (req.body)
+    const savedBooking = await newBooking.save()
+    res.json({message:"issue created",savedBooking})
+}
+catch(e){
+    res.json(e.message)
+}
+})
+
+
+// router.get('/vwadventure/:id',async(req,res)=>{
+    
+//     let id=req.params.id
+
+//     console.log(id)
+//     let responseData=[]
+//     let pkgagency=await packageagency.findById(id)
+//     for (let x of pkgagency.agencyid){
+//        let agency=await User.findById(x)
+//        responseData.push({
+//            package:x,
+//            agency:agency
+//        })
+//     }
+//        res.json(responseData)
+// })
 
 
 export default router

@@ -180,20 +180,73 @@ router.put('/editpackage/:id',upload.fields([{name:'coverImage'}]),async(req,res
 
 })
 
-router.put('/addresortToPackage/:id',async (req,res)=>{
-    console.log(req.body);
-    let id=req.params.id
-    let response=await packageagency.findByIdAndUpdate(id,req.body)
-    console.log(response);
+// router.put('/addresortToPackage/:id',async (req,res)=>{
+//     try{
+//     console.log(req.body);
+//     let id=req.params.id;
+//     let updatedPackage=await packageagency.findByIdAndUpdate(id,
+//         { $push: { resortId: { $each: req.body.resortId } } },
+//         { new: true }
+//         );
+//         console.log(updatedPackage);
+//         res.json(updatedPackage);
+//     } catch (error) {
+//         // Handle errors
+//         console.error(error);
+//         res.status(500).send("Internal Server Error");
+//     }
+// });
 
+router.put('/addresortToPackage/:id', async (req, res) => {
+    try {
+        console.log(req.body);
+        
+        // Extract ID from URL parameters
+        let id = req.params.id;
+        
+        // Update the document in the database
+        let updatedPackage = await packageagency.findByIdAndUpdate(
+            id,
+            { $addToSet: { resortId: { $each: req.body.resortId } } },
+            { new: true }
+        );
+        
+        console.log(updatedPackage);
+        res.json(updatedPackage);
+    } catch (error) {
+        // Handle errors
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
 
-    })
-router.put('/addAdventuretoPackage/:id',async(req,res)=>{
-    console.log(req.body);
-    let id=req.params.id
-    let response=await adventureagency.findByIdAndUpdate(id,req.body)
-    console.log(response)
-})
+   
+    router.put('/addAdventuretoPackage/:id', async (req, res) => {
+        try {
+            console.log(req.body, '===================');
+            
+            // Extract ID from URL parameters
+            let id = req.params.id;
+            
+            // Update the document in the database
+            let updatedPackage = await packageagency.findByIdAndUpdate(
+                id,
+                { $addToSet: { adventureid: { $each: req.body.adventureid } } },
+                { new: true }
+            );
+            
+            // Log the updated document
+            console.log(updatedPackage);
+            
+            // Send the updated document as response
+            res.json(updatedPackage);
+        } catch (error) {
+            // Handle errors
+            console.error(error);
+            res.status(500).send("Internal Server Error");
+        }
+    });
+    
 
     router.get('/viewPackageResort/:id',async(req,res)=>{
         try{
@@ -226,9 +279,9 @@ router.put('/addAdventuretoPackage/:id',async(req,res)=>{
         let response=await packageagency.findById(id)
         console.log(response,'sda');
         let responseData=[]
-        for (let x of response.resortId){
+        for (let x of response.adventureid){
 
-            let myresorts=await User.findById(x)
+            let myresorts=await adventureagency.findById(x)
             console.log(myresorts);
             responseData.push({
                 resorts:myresorts
