@@ -4,6 +4,8 @@ const router= express.Router()
 import { upload } from '../multer.js'
 import packageagency from "../models/package.js";
 import booking from "../models/booking.js";
+import room from "../models/room.js";
+import adventureagency from "../models/adventure.js";
 
 
 
@@ -99,24 +101,24 @@ router.get('/vwaccomodation/:id',async(req,res)=>{
    
 
 })
-router.get('/detailvwresort/:id',async(req,res)=>{
-    let id=req.params.id
-    console.log(id)
-    let response=await User.findById(id)
-    let rooms=await room.find({resortid: response._id})
-    let facilities=await Facility.find({resortid:response._id})
-
-    res.json({response,rooms,facilities})
-    console.log(response)
-})
+// router.get('/detailvwresort/:id',async(req,res)=>{
+//     let id=req.params.id
+//     console.log(id)
+//     let response=await User.findById(id)
+//     let rooms=await room.find({resortid: response._id})
+//     let facilities=await Facility.find({resortid:response._id})
+//     res.json({response,rooms,facilities})
+//     console.log(response)
+// })
 
 router.post('/booking',async(req,res)=>{
     try{
+     let id=req.params.id
+    console.log(req.body,"=======");
 
-    
-    console.log(req.body);
-    const newBooking = new booking (req.body)
-    const savedBooking = await newBooking.save()
+    let newbooking= await booking(req.body)
+    const savedBooking = await newbooking.save()
+  
     res.json({message:"issue created",savedBooking})
 }
 catch(e){
@@ -125,22 +127,23 @@ catch(e){
 })
 
 
-// router.get('/vwadventure/:id',async(req,res)=>{
+router.get('/vwadventure/:id',async(req,res)=>{
     
-//     let id=req.params.id
+    let id=req.params.id
 
-//     console.log(id)
-//     let responseData=[]
-//     let pkgagency=await packageagency.findById(id)
-//     for (let x of pkgagency.agencyid){
-//        let agency=await User.findById(x)
-//        responseData.push({
-//            package:x,
-//            agency:agency
-//        })
-//     }
-//        res.json(responseData)
-// })
+    console.log(id)
+    let responseData=[]
+    let pkgagency=await packageagency.findById(id)
+    console.log(pkgagency,'=====================');
+    for (let x of pkgagency.adventureid){
+       let agency=await adventureagency.findById(x)
+       responseData.push({
+           package:x,
+           agency:agency
+       })
+    }
+       res.json(responseData)
+})
 
 
 export default router

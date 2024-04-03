@@ -10,18 +10,18 @@ const booktripSchema=new Schema({
         type:mongoose.Types.ObjectId,
         ref:packageagency
     },
-    resortId:{
+    resortId:[{
         type:mongoose.Types.ObjectId,
         ref:User
-    },
+    }],
     userId:{
         type:mongoose.Types.ObjectId,
         ref:User
     },
-    adventureId:{
+    adventureId:[{
         type:mongoose.Types.ObjectId,
         ref:adventureagency
-    },
+    }],
     guidestatus:{
         type:String,
         default:"pending"
@@ -36,19 +36,19 @@ const booktripSchema=new Schema({
     },
    
     health:{
-        type:Boolean
+        type:String
     },
    
     experience:{
-        type:Boolean
+        type:String
     },
     
     gender:{
-        type:Boolean
+        type:String
     },
    
     guide:{
-        type:Boolean
+        type:String
     },
     
 })

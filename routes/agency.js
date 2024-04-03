@@ -5,6 +5,8 @@ import { upload } from '../multer.js'
 import adventureagency from "../models/adventure.js";
 import room from "../models/room.js";
 import Facility from "../models/facilities.js";
+import destinationadd from "../models/destination.js";
+import guiderequest from "../models/requestguide.js";
 
 const router=express.Router()
 
@@ -43,6 +45,44 @@ router.post('/adventureadd',upload.single('image'),async(req,res)=>{
     res.json({message:"adventure created",data:savedPackage})
 
 })
+router.put('/adventureupdate/:id', upload.single('image'), async (req, res) => {
+    try {
+        const adventureId = req.params.id;
+        const updatedData = { ...req.body };
+        
+        // Check if there's an image file uploaded
+        if (req.file) {
+            console.log(req.file);
+            updatedData.image = req.file.filename;
+        }
+        
+        const updatedAdventure = await adventureagency.findByIdAndUpdate(adventureId, updatedData, { new: true });
+        
+        if (!updatedAdventure) {
+            return res.status(404).json({ success: false, message: 'Adventure not found' });
+        }
+        
+        res.json({ message: 'Adventure updated', data: updatedAdventure });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+
+router.post('/adddestination',async(req,res)=>{
+    try{
+
+    console.log(req.body);
+    const newDestination = new destinationadd(req.body)
+    const savedDestination = await newDestination.save()
+    res.json({message:"issue created",savedDestination})
+}
+catch(e){
+    res.json(e.message)
+}
+})
+
 
 
 
@@ -180,6 +220,7 @@ router.put('/editpackage/:id',upload.fields([{name:'coverImage'}]),async(req,res
 
 })
 
+
 // router.put('/addresortToPackage/:id',async (req,res)=>{
 //     try{
 //     console.log(req.body);
@@ -293,6 +334,18 @@ router.put('/addresortToPackage/:id', async (req, res) => {
         }
         catch(e){
             res.json(e)
+        }
+    })
+    router.post('/guiderequest',async(req,res)=>{
+        try{
+            let id=req.params.id
+            console.log(req.body)
+            const newguiderequest= new guiderequest(req.body)
+            const savedguiderequest=await newguiderequest.save();
+            res.json({message:"guide request",savedguiderequest})
+        }
+        catch(e){
+            res.json(e.message)
         }
     })
 
