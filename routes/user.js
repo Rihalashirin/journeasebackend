@@ -65,6 +65,7 @@ router.post('/login',async(req,res)=>{
 
 router.get('/findpackage',async(req,res)=>{
     let pkgagency=await packageagency.find()
+    console.log(pkgagency,'pkgagency');
     let responseData=[]
  for (let x of pkgagency){
     let Agencies=await User.findById(x.agencyid)
@@ -84,6 +85,18 @@ router.get('/detailvwpackage/:id',async(req,res)=>{
     res.json({response,agency})
     console.log(response);
 })
+
+router.get('/detailvwagency/:id',async(req,res)=>{
+    let id=req.params.id
+    console.log(id);
+    let response=await User.findById(id)
+
+    console.log(response);
+    res.json(response) 
+})
+
+
+
 router.get('/vwaccomodation/:id',async(req,res)=>{
     let id=req.params.id
 
@@ -143,6 +156,40 @@ router.get('/vwadventure/:id',async(req,res)=>{
        })
     }
        res.json(responseData)
+})
+router.get('/vwmybookingtable/:id',async(req,res)=>{
+try{
+    let id=req.params.id
+    console.log(id)
+    let response=await booking.find({userId:id})
+    console.log(response,'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
+    let responseData=[];
+    for(const newresponse of response){
+        let package1=await packageagency.findById(newresponse.packageid)
+        console.log(package1,'rrrrrrrrrrrrrrrrrrrrrrrr');
+        responseData.push({
+            package1:package1,
+            req:newresponse
+        })
+    }
+    console.log(responseData)
+    res.json(responseData)
+
+}
+catch(e){
+    res.json(e.message)
+
+}
+})
+router.get('/viewbookigdetail/:id',async(req,res)=>{
+    let id=req.params.id
+    console.log(id);
+    let response=await booking.findById(id)
+    console.log(response)
+    let package1=await packageagency.findById(response.packageid)
+    let resort=await User.findById(response.resortId)
+    let adv=await adventureagency.findById(response.adventureId)
+    res.json({response,package1,resort,adv})
 })
 
 

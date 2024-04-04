@@ -17,9 +17,18 @@ coverImage:{
 location:{
     type:String,
 },
-destination:{
-    type:String,
-},
+destination:[{
+
+    Day:{
+        type:Number,
+    },
+    Destination:{
+        type:String
+    },
+    activities:{
+        type:String
+    },
+}],
 noOfDays:{
     type:String,
 },
@@ -40,6 +49,7 @@ resortId:[{
     ref:User
 
 }],
+
 
 
 

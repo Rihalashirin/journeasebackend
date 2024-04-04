@@ -5,7 +5,7 @@ import { upload } from '../multer.js'
 import adventureagency from "../models/adventure.js";
 import room from "../models/room.js";
 import Facility from "../models/facilities.js";
-import destinationadd from "../models/destination.js";
+// import destinationadd from "../models/destination.js";
 import guiderequest from "../models/requestguide.js";
 
 const router=express.Router()
@@ -70,18 +70,18 @@ router.put('/adventureupdate/:id', upload.single('image'), async (req, res) => {
 });
 
 
-router.post('/adddestination',async(req,res)=>{
-    try{
+// router.post('/adddestination',async(req,res)=>{
+//     try{
 
-    console.log(req.body);
-    const newDestination = new destinationadd(req.body)
-    const savedDestination = await newDestination.save()
-    res.json({message:"issue created",savedDestination})
-}
-catch(e){
-    res.json(e.message)
-}
-})
+//     console.log(req.body);
+//     const newDestination = new destinationadd(req.body)
+//     const savedDestination = await newDestination.save()
+//     res.json({message:"issue created",savedDestination})
+// }
+// catch(e){
+//     res.json(e.message)
+// }
+// })
 
 
 

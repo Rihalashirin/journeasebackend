@@ -50,6 +50,16 @@ const booktripSchema=new Schema({
     guide:{
         type:String
     },
+    adult:{
+        type:Number
+    },
+    child:{
+        type:Number
+    },
+    date:{
+        type:Date,
+        default:Date.now,
+    },
     
 })
 const booking=model('booking',booktripSchema)
