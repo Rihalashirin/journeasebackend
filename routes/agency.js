@@ -8,6 +8,9 @@ import Facility from "../models/facilities.js";
 // import destinationadd from "../models/destination.js";
 import guiderequest from "../models/requestguide.js";
 
+import mongoose from "mongoose";
+import booking from "../models/booking.js";
+
 const router=express.Router()
 
 router.post('/package', upload.fields([{ name: 'coverImage' }, { name: 'uploadBrochure' }]), async (req, res) => {
@@ -348,6 +351,72 @@ router.put('/addresortToPackage/:id', async (req, res) => {
             res.json(e.message)
         }
     })
+    router.get('/vwbookingtable/:id',async(req,res)=>{
+        try{
+            let id=req.params.id
+            console.log(id)
+            let response=await packageagency.find({agencyid:id})
+            console.log(response,'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
+            let responseData=[];
+            for(const newresponse of response){
+                let bookings=await booking.find({packageid:newresponse._id})
+                for(const b of bookings){
+                    let user=await User.findById(b.userId)
+                    console.log(bookings,'rrrrrrrrrrrrrrrrrrrrrrrr');
+                    responseData.push({
+                        booking:bookings,
+                        req:newresponse,
+                        user:user
+                    })
+                }
+            }
+            console.log(responseData)
+            res.json(responseData)
+        
+        }
+        catch(e){
+            console.log(e);
+            res.json(e.message)
+        
+        }
+        })
+
+        router.get('/vwdetailbooking/:id',async(req,res)=>{
+        try{
+            let id=req.params.id;
+            console.log(id)
+            let response=await booking.findById(id)
+
+            console.log(response); 
+            let user=await User.findById(response.userId)
+            let responseData=[]
+            for( const x of response.adventureId ){
+            let adventure=await adventureagency.findById(x)
+            console.log(adventure)
+            responseData.push({
+                adventure:adventure
+            })
+            
+            }
+            
+            for(const b of response.resortId){
+                let resort=await User.findById(b)
+                responseData.push({
+                    resort:resort
+                }
+                    )
+                
+            }
+            responseData.push({
+                booking:response
+            })
+         
+
+        }
+        catch(e){
+            res.json(e.message);
+        }
+        })
 
 
 export default router
