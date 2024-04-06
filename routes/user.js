@@ -6,6 +6,7 @@ import packageagency from "../models/package.js";
 import booking from "../models/booking.js";
 import room from "../models/room.js";
 import adventureagency from "../models/adventure.js";
+import reviewuser from "../models/review.js";
 
 
 
@@ -82,6 +83,7 @@ router.get('/detailvwpackage/:id',async(req,res)=>{
     console.log(id);
     let response=await packageagency.findById(id)
     let agency=await User.findById(response.agencyid)
+    let des=await 
     res.json({response,agency})
     console.log(response);
 })
@@ -190,6 +192,32 @@ router.get('/viewbookigdetail/:id',async(req,res)=>{
     let resort=await User.findById(response.resortId)
     let adv=await adventureagency.findById(response.adventureId)
     res.json({response,package1,resort,adv})
+})
+
+router.post('/addreview/:id',async(req,res)=>{
+  try{
+    let id=req.params.id
+    console.log(req.body);
+    const newReview = new reviewuser(req.body)
+    const savedReview = await newReview.save()
+    res.json({message:"review created",savedReview})
+}
+
+  
+
+catch(e){
+    res.json(e.message)
+
+}
+
+})
+router.get('/vwpkgname/:id',async(req,res)=>{
+    let id=req.params.id
+    let response=await booking.findById(id)
+    let pkg=await packageagency.findById(response.packageid);
+    let agnc=await User.findById(pkg.agencyid);
+    console.log(response)
+    res.json({response,pkg,agnc})
 })
 
 

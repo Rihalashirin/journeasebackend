@@ -199,10 +199,22 @@ router.get('/detailguide/:id',async(req,res)=>{
         res.json(e)
     }
 })
-router.post('enquireguide',async(req,res)=>{
-    console.log(req.body)
+router.post('/enquireguide',async(req,res)=>{
+    try{
+        let id=req.params.id    
+        console.log(req.body)
+        const newRequestguide= new guiderequest(req.body)
+        const savedRequestguide= await newRequestguide.save()
+        res.json({message: "enquire guide",savedRequestguide})
+    }
+    catch(e){
+        res.json(e.message)
+
+    }
+
     
 })
+
 router.put('/editpackage/:id',upload.fields([{name:'coverImage'}]),async(req,res)=>{
     try{
         if(req.files['coverImage']){
@@ -339,18 +351,27 @@ router.put('/addresortToPackage/:id', async (req, res) => {
             res.json(e)
         }
     })
-    router.post('/guiderequest',async(req,res)=>{
-        try{
-            let id=req.params.id
-            console.log(req.body)
-            const newguiderequest= new guiderequest(req.body)
-            const savedguiderequest=await newguiderequest.save();
-            res.json({message:"guide request",savedguiderequest})
-        }
-        catch(e){
-            res.json(e.message)
-        }
+    router.put('/assignhealth/:id',async(req,res)=>{
+        let id=req.params.id
+        console.log(id);
+        console.log(req.body);
+        let response=await booking.findByIdAndUpdate(id,req.body)
+        console.log(response);
+        res.json(response)
     })
+
+    // router.post('/guiderequest',async(req,res)=>{
+    //     try{
+    //         let id=req.params.id
+    //         console.log(req.body)
+    //         const newguiderequest= new guiderequest(req.body)
+    //         const savedguiderequest=await newguiderequest.save();
+    //         res.json({message:"guide request",savedguiderequest})
+    //     }
+    //     catch(e){
+    //         res.json(e.message)
+    //     }
+    // })
     router.get('/vwbookingtable/:id',async(req,res)=>{
         try{
             let id=req.params.id
@@ -364,7 +385,7 @@ router.put('/addresortToPackage/:id', async (req, res) => {
                     let user=await User.findById(b.userId)
                     console.log(bookings,'rrrrrrrrrrrrrrrrrrrrrrrr');
                     responseData.push({
-                        booking:bookings,
+                        booking:b,
                         req:newresponse,
                         user:user
                     })
@@ -388,8 +409,14 @@ router.put('/addresortToPackage/:id', async (req, res) => {
             let response=await booking.findById(id)
 
             console.log(response); 
-            let user=await User.findById(response.userId)
+          
             let responseData=[]
+            let user=await User.findById(response.userId)
+            let packages=await packageagency.findById(response.packageid)
+            responseData.push({
+                user:user,
+                package:packages
+            })
             for( const x of response.adventureId ){
             let adventure=await adventureagency.findById(x)
             console.log(adventure)
@@ -408,14 +435,23 @@ router.put('/addresortToPackage/:id', async (req, res) => {
                 
             }
             responseData.push({
-                booking:response
+                booking:response,
+                
             })
-         
+         console.log(responseData)
+         res.json(responseData)
 
         }
         catch(e){
             res.json(e.message);
         }
+        })
+        router.put('/managebooking/:id',async(req,res)=>{
+            let id=req.params.id
+            console.log(id);
+            console.log(req.body);
+            let response=await booking.findByIdAndUpdate(id,req.body)
+            console.log(response);
         })
 
 

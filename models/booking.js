@@ -60,6 +60,10 @@ const booktripSchema=new Schema({
         type:Date,
         default:Date.now,
     },
+    status:{
+        type:String,
+        default:"pending"
+    }
     
 })
 const booking=model('booking',booktripSchema)
