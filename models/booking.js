@@ -56,6 +56,9 @@ const booktripSchema=new Schema({
     child:{
         type:Number
     },
+    pickingplace:{
+        type:String
+    },
     date:{
         type:Date,
         default:Date.now,

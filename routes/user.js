@@ -83,9 +83,10 @@ router.get('/detailvwpackage/:id',async(req,res)=>{
     console.log(id);
     let response=await packageagency.findById(id)
     let agency=await User.findById(response.agencyid)
-    let des=await 
+    
+    
+    console.log(response,agency);
     res.json({response,agency})
-    console.log(response);
 })
 
 router.get('/detailvwagency/:id',async(req,res)=>{
@@ -168,9 +169,11 @@ try{
     let responseData=[];
     for(const newresponse of response){
         let package1=await packageagency.findById(newresponse.packageid)
+        let agnc=await User.findById(package1.agencyid)
         console.log(package1,'rrrrrrrrrrrrrrrrrrrrrrrr');
         responseData.push({
             package1:package1,
+            agnc:agnc,
             req:newresponse
         })
     }
@@ -194,12 +197,12 @@ router.get('/viewbookigdetail/:id',async(req,res)=>{
     res.json({response,package1,resort,adv})
 })
 
-router.post('/addreview/:id',async(req,res)=>{
+router.post('/addreview',async(req,res)=>{
   try{
-    let id=req.params.id
-    console.log(req.body);
+    console.log(req.body,'..................');
     const newReview = new reviewuser(req.body)
     const savedReview = await newReview.save()
+    console.log(savedReview);
     res.json({message:"review created",savedReview})
 }
 

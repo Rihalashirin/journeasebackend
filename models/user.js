@@ -43,8 +43,14 @@ const userSchema=new Schema({
     licenseNumber:{
         type:String
     },
-    officeAddress:{
+    place:{
         type:String
+    },
+    district:{
+        type:String,
+    },
+    pin:{
+        type:Number,
     },
     description:{
         type:String
@@ -60,6 +66,9 @@ const userSchema=new Schema({
     },
     licenseProof:{
         type:String
+    },
+    contactNumberalternative:{
+        type:Number,
     },
     companyLogo:{
         type:String

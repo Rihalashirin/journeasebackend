@@ -1,5 +1,6 @@
 import mongoose,{ Schema,model} from "mongoose";
 import  User  from "./user.js";
+import packageagency from "./package.js";
 
 
 const issueSchema= new Schema({
@@ -10,6 +11,10 @@ const issueSchema= new Schema({
     },
     issue:{
         type:String,
+    },
+    packageid:{
+        type:mongoose.Types.ObjectId,
+        ref:packageagency
     }
 })
 const Issue=model('issues',issueSchema)

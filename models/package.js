@@ -11,12 +11,26 @@ packageName:{
     type:String,
     required:true
 },
+category:{
+    type:String,
+},
 coverImage:{
     type:String,
 },
 location:{
     type:String,
 },
+transports: [{
+    noofppl:{
+        type:String,
+    },
+    transportOption:{
+        type:String,
+    },
+    price:{
+        type:Number,
+    },
+}],
 destination:[{
 
     Day:{
