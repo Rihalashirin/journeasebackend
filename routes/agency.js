@@ -402,50 +402,44 @@ router.put('/addresortToPackage/:id', async (req, res) => {
         }
         })
 
-        router.get('/vwdetailbooking/:id',async(req,res)=>{
-        try{
-            let id=req.params.id;
-            console.log(id)
-            let response=await booking.findById(id)
-
-            console.log(response); 
-          
-            let responseData=[]
-            let user=await User.findById(response.userId)
-            let packages=await packageagency.findById(response.packageid)
-            responseData.push({
-                user:user,
-                package:packages
-            })
-            for( const x of response.adventureId ){
-            let adventure=await adventureagency.findById(x)
-            console.log(adventure)
-            responseData.push({
-                adventure:adventure
-            })
-            
-            }
-            
-            for(const b of response.resortId){
-                let resort=await User.findById(b)
-                responseData.push({
-                    resort:resort
+        router.get('/vwdetailbooking/:id', async (req, res) => {
+            try {
+                let id = req.params.id;
+                console.log(id);
+                let response = await booking.findById(id);
+        
+                console.log(response);
+        
+                let user = await User.findById(response.userId);
+                let packageDetail = await packageagency.findById(response.packageid);
+        
+                let adventures = [];
+                for (const ad of response.adventureId) {
+                    let adventure = await adventureagency.findById(ad);
+                    adventures.push(adventure);
                 }
-                    )
-                
+        
+                let resorts = [];
+                for (const re of response.resortId) {
+                    let resort = await User.findById(re);
+                    resorts.push(resort);
+                }
+        
+                let responseData = {
+                    user: user,
+                    package: packageDetail,
+                    adventures: adventures,
+                    resorts: resorts,
+                    booking: response
+                };
+        
+                res.json(responseData);
+            } catch (e) {
+                res.json(e.message);
             }
-            responseData.push({
-                booking:response,
-                
-            })
-         console.log(responseData)
-         res.json(responseData)
+        });
+        
 
-        }
-        catch(e){
-            res.json(e.message);
-        }
-        })
         router.put('/managebooking/:id',async(req,res)=>{
             let id=req.params.id
             console.log(id);
