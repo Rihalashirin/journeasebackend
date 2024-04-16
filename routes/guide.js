@@ -41,10 +41,20 @@ catch(e){
     res.json(e.message)
 }
 })
+router.get('/vwfeedback/:id',async(req,res)=>{
+    let id=req.params.id
+    console.log(id);
+    let response=await Issue.findOne({bookingid:id})
+    console.log(response);
+    res.json(response)
+    
+
+})
+
 router.get('/vwimageguide/:id',async(req,res)=>{
     let id=req.params.id
     console.log(id);
-    let response=await imagesguide.findById(id)
+    let response=await imagesguide.find({bookingid:id})
     console.log(response);
     res.json(response)
     
@@ -68,7 +78,7 @@ router.get('/vwrequestagency/:id',async(req,res)=>{
           console.log(agnc,'aaaaaaaaaaaaaaaaaaaaaaaaaaa');
           responseData.push({
             bookings:bookings,
-            req:response,
+            req:newresponse,
             agn:agnc,
             pkg:pkg
          } )
@@ -85,13 +95,15 @@ router.get('/vwrequestagency/:id',async(req,res)=>{
 router.get('/vwdetailbooking/:id', async(req,res)=>{
     let id=req.params.id
     console.log(id);
-    let bookings=await booking.findById(id)
-    console.log(bookings)
-    if(bookings){
+    let response=await guiderequest.findById(id)
+    console.log(response)
+    if(response){
+        let bookings=await booking.findById(response.bookingid)
+        let usr=await User.findById(bookings.userId)
     let package1=await packageagency.findById(bookings.packageid)
     let resort=await User.findById(bookings.resortId)
     let adv=await adventureagency.findById(bookings.adventureId)
-    let user=await User.findById(bookings.userId)
+    // let user=await User.findById(bookings.userId)
     // responseData.push({
     //     bookings:bookings,
     //     req:response,
@@ -99,14 +111,16 @@ router.get('/vwdetailbooking/:id', async(req,res)=>{
     //     pkg:package1,
     //     adv:adv
     //  } )
-    res.json({bookings,package1,resort,adv,user})
+    res.json({response,bookings,usr,package1,resort,adv})
 }
 })
+
+
 router.put('/managebooking/:id',async(req,res)=>{
     let id=req.params.id
     console.log(id);
     console.log(req.body);
-    let response=await booking.findByIdAndUpdate(id,req.body)
+    let response=await guiderequest.findByIdAndUpdate(id,req.body)
     console.log(response);
 })
 

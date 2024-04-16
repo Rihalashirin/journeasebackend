@@ -66,6 +66,12 @@ const booktripSchema=new Schema({
     status:{
         type:String,
         default:"pending"
+    },
+    accomodatn:{
+        type:String,
+    },
+    selectedTransport:{
+        type:String,
     }
     
 })
