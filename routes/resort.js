@@ -3,6 +3,10 @@ import Facility from "../models/facilities.js";
 import User  from "../models/user.js";
 import room from "../models/room.js";
 import { upload } from "../multer.js";
+import resortenquire from "../models/resort.js";
+import booking from "../models/booking.js";
+import packageagency from "../models/package.js";
+import adventureagency from "../models/adventure.js";
 const router=express()
 
 router.post('/facilities',async(req,res)=>{
@@ -95,6 +99,71 @@ router.get('/viewfacilityresort/:id',async(req,res)=>{
         let response=await Facility.findByIdAndUpdate(id,req.body) 
         res.json(response)
 
+    })
+    router.get('/vwrequestagency/:id',async(req,res)=>{
+        let id= req.params.id
+        console.log(req.body)
+        let response= await resortenquire.find({resortid:id})
+        console.log(response)
+        let responseData=[]
+        for(const newresponse of response) {
+            let bookings=await booking.findById(newresponse.bookingid);
+            console.log(bookings);
+    
+          if(bookings){
+    
+              let pkg=await packageagency.findById(bookings.packageid);
+              console.log(pkg);
+              let agnc=await User.findById(pkg.agencyid)
+              console.log(agnc);
+              responseData.push({
+                bookings:bookings,
+                req:newresponse,
+                agn:agnc,
+                pkg:pkg
+             } )
+            }
+    
+    
+    
+            
+        }
+        console.log(responseData)
+        res.json(responseData)
+    })
+    router.get('/vwdetailbooking/:id', async(req,res)=>{
+        let id=req.params.id
+        console.log(id);
+        let response=await resortenquire.findById(id)
+        if(response){
+            let bookings=await booking.findById(response.bookingid)
+            let usr=await User.findById(bookings.userId)
+        let package1=await packageagency.findById(bookings.packageid)
+        let resort=await User.findById(bookings.resortId)
+        let adv=await adventureagency.findById(bookings.adventureId)
+        // let user=await User.findById(bookings.userId)
+        // responseData.push({
+        //     bookings:bookings,
+        //     req:response,
+        //     resorts:resort,
+        //     pkg:package1,
+        //     adv:adv
+        //  } )
+        res.json({response,bookings,usr,package1,resort,adv})
+    }
+    })
+    router.put('/managebooking/:id',async(req,res)=>{
+        let id=req.params.id
+        console.log(id);
+        console.log(req.body);
+        let response=await resortenquire.findByIdAndUpdate(id,req.body)
+        if(response){
+
+            let response2=await booking.findByIdAndUpdate(response.bookingid,req.body)
+            console.log(response,response2);
+        }
+        console.log(response);
+        res.json(response)
     })
 
 export default router

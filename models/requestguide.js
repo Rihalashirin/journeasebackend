@@ -11,14 +11,18 @@ const requestguideSchema=Schema({
         type:mongoose.Types.ObjectId,
         ref:User, 
     },
-    status:{
+    guidestatus:{
         type:String,
         default:"pending"
     },
     bookingid:{
         type:mongoose.Types.ObjectId,
         ref:booking, 
+    },
+    wage:{
+        type:Number,
     }
+   
 })
 const guiderequest=model('guiderequest',requestguideSchema)
 export default guiderequest

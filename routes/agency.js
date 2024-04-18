@@ -10,6 +10,7 @@ import guiderequest from "../models/requestguide.js";
 
 import mongoose from "mongoose";
 import booking from "../models/booking.js";
+import resortenquire from "../models/resort.js";
 
 const router=express.Router()
 
@@ -104,6 +105,22 @@ router.get('/detailvwresort/:id',async(req,res)=>{
     res.json({response,rooms,facilities})
     console.log(response)
 })
+
+router.post('/enquireresort',async(req,res)=>{
+    try{
+            
+        console.log(req.body)
+        const newRequestresort= new resortenquire(req.body)
+        const savedRequestresort= await newRequestresort.save()
+        res.json({message: "enquire resort",savedRequestresort})
+    }
+    catch(e){
+        res.json(e.message)
+
+    }
+
+    
+})
 router.get('/vwpkgagency/:id',async(req,res)=>{
     try{
 
@@ -136,11 +153,13 @@ router.get('/vwagencyprofile/:id',async(req,res)=>{
     })
 
 router.put('/agencyeditprofile/:id',upload.fields([{ name: 'licenseProof'}, { name: 'companyLogo'},{name:'idProof'},{name:'image'},{name:'coverImage'}]),async(req,res)=>{
-        let id=req.params.id
+       try{
+    let id=req.params.id
         console.log(req.files);
         if(req.files['licenseProof']){
             
             let coverimage =req.files['licenseProof'][0].filename
+            console.log(coverimage);
             req.body={...req.body,coverImage:coverimage}
         }
         if(req.files['companyLogo']){
@@ -169,7 +188,11 @@ router.put('/agencyeditprofile/:id',upload.fields([{ name: 'licenseProof'}, { na
         }
 
         let response=await User.findByIdAndUpdate(id,req.body)
-        console.log(response);
+        // console.log(response);
+    }
+    catch(e){
+        res.json(e.message)
+    }
     })
     
 
@@ -226,6 +249,7 @@ router.put('/editpackage/:id',upload.fields([{name:'coverImage'}]),async(req,res
         console.log(req.body)
         let response=await packageagency.findByIdAndUpdate(id,req.body)
         console.log(response)
+        res.json(response)
     }
     catch(e){
         res.json(e)
@@ -447,6 +471,13 @@ router.put('/addresortToPackage/:id', async (req, res) => {
             let response=await booking.findByIdAndUpdate(id,req.body)
             console.log(response);
         })
+
+        // router.put('/assignhealth/:id',async(req,res)=>{
+        //     let id=req.params.id
+        //     console.log(id);
+        //     let response=await booking.findOneAndUpdate(id,req.body)
+        //     console.log(response);
+        // })
 
 
 export default router

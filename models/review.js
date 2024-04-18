@@ -13,6 +13,12 @@ const reviewSchema=Schema({
    },
    destinationName:{
     type:String,
+   },
+   resortreview:{
+    type:String
+   },
+   accomodatn:{
+    type:String,
    }
 
 })

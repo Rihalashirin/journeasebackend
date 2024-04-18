@@ -1,5 +1,6 @@
 import mongoose,{ Schema,model} from "mongoose";
 import User from "./user.js";
+import booking from "./booking.js";
 
 const enquiryguideSchema=Schema({
     guideid:{
@@ -13,6 +14,10 @@ const enquiryguideSchema=Schema({
     status:{
         type:String,
         default:'pending'
+    },
+    bookingid:{
+        type:mongoose.Types.ObjectId,
+        ref:booking
     }
     
 })

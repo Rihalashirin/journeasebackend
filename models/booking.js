@@ -2,6 +2,7 @@ import mongoose,{ Schema,model} from "mongoose";
 import packageagency from "./package.js";
 import User from "./user.js";
 import adventureagency from "./adventure.js";
+import room from "./room.js";
 
 
 const booktripSchema=new Schema({
@@ -22,6 +23,10 @@ const booktripSchema=new Schema({
         type:mongoose.Types.ObjectId,
         ref:adventureagency
     }],
+    resortstatus:{
+        type:String,
+        default:"pending"
+    },
     guidestatus:{
         type:String,
         default:"pending"
@@ -72,7 +77,21 @@ const booktripSchema=new Schema({
     },
     selectedTransport:{
         type:String,
-    }
+    },
+    wage:{
+        type:Number,
+    },
+    roomid:{
+        type:mongoose.Types.ObjectId,
+        ref:room, 
+    },
+    healthwage:{
+
+      type:Number,
+    },
+    BillAmount:{
+        type:Number,
+    },
     
 })
 const booking=model('booking',booktripSchema)
