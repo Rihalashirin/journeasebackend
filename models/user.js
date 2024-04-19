@@ -16,6 +16,7 @@ const userSchema=new Schema({
     },
     contactNumber:{
         type:Number,
+        unique:true,
         
 
     },
@@ -30,18 +31,21 @@ const userSchema=new Schema({
     },
     email:{
         type:String,
-        required:true
+        required:true,
+        unique:true,
     },
     password:{
         type:String,
         required:true
     },
+        
     companyName:{
         type:String,
         
     },
     licenseNumber:{
-        type:String
+        type:String,
+        unique:true,
     },
     place:{
         type:String
@@ -69,6 +73,7 @@ const userSchema=new Schema({
     },
     contactNumberalternative:{
         type:Number,
+
     },
     companyLogo:{
         type:String
@@ -90,7 +95,8 @@ const userSchema=new Schema({
         type:String
     },
     registrationNumber:{
-        type:String
+        type:String,
+        unique:true
     },
     propertyAddress:{
         type:String

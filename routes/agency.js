@@ -11,6 +11,7 @@ import guiderequest from "../models/requestguide.js";
 import mongoose from "mongoose";
 import booking from "../models/booking.js";
 import resortenquire from "../models/resort.js";
+import reviewuser from "../models/review.js";
 
 const router=express.Router()
 
@@ -478,6 +479,36 @@ router.put('/addresortToPackage/:id', async (req, res) => {
         //     let response=await booking.findOneAndUpdate(id,req.body)
         //     console.log(response);
         // })
+        router.get('/vwreview/:id',async(req,res)=>{
+            let id=req.params.id
+            console.log(id);
+            let response2=await packageagency.find({agencyid:id})
+            let responseData=[]
+            for (const newresponse of response2) {
+                let response=await booking.find({packageid:newresponse?._id})
+                console.log(response,'-----------------');
+                for(const book of response) {
 
+                let reviews=await reviewuser.find({bookingid:book?._id})
+                for(let x of reviews) {
+
+                let bookings=await booking.findById(x?.bookingid)
+                let users=await User.findById(bookings?.userId)
+                let pacakages=await packageagency.findById(bookings?.packageid)
+                console.log(reviews);
+                responseData.push({
+                    review:x,
+                    booking:book,
+                user:users,
+            package:pacakages});
+            }
+        }
+    }
+
+            
+            res.json(responseData)
+            
+        
+        })
 
 export default router

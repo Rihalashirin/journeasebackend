@@ -38,6 +38,26 @@ router.post('/registration',upload.fields([{name:'idProof'},{name:'licenseProof'
             let logo = req.files['companyLogo'][0].filename
             req.body={...req.body,companyLogo:logo}
         }
+        const existMail=await User.findOne({email:req.body.email})
+        if (existMail){
+            return res.status(400).json({message:'mail exist'})
+        }
+        if(req.body.licenseNumber){
+
+            const existlicense=await User.findOne({licenseNumber:req.body.licenseNumber})
+            if (existlicense){
+                return res.status(400).json({message:'licensenumber exist'})
+            }
+        }
+        const existphonenumber=await User.findOne({contactNumber:req.body.contactNumber})
+        if (existphonenumber){
+            return res.status(400).json({message:'contactnumber exist'})
+        }
+        const existregisternumber=await User.findOne({registrationNumber:req.body.registrationNumber})
+        if (existregisternumber){
+            return res.status(400).json({message:'registraionNumber exist'})
+        }
+
         console.log(req.body);
         const newUser = new User(req.body)
         console.log(newUser);
