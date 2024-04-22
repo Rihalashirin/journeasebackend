@@ -53,10 +53,13 @@ router.post('/registration',upload.fields([{name:'idProof'},{name:'licenseProof'
         if (existphonenumber){
             return res.status(400).json({message:'contactnumber exist'})
         }
+        if(req.body.registrationNumber){
+
         const existregisternumber=await User.findOne({registrationNumber:req.body.registrationNumber})
         if (existregisternumber){
             return res.status(400).json({message:'registraionNumber exist'})
         }
+    }
 
         console.log(req.body);
         const newUser = new User(req.body)
@@ -83,6 +86,12 @@ router.post('/login',async(req,res)=>{
     console.log(user);
     res.json(user)
 })
+router.post('/api/auth/authenticate',async (req,res)=>{
+    console.log(req.body);
+    let response=await  User.findOne(req.body)
+    console.log(response);
+    res.json(response)
+})
 
 
 
@@ -92,9 +101,11 @@ router.get('/findpackage',async(req,res)=>{
     let responseData=[]
  for (let x of pkgagency){
     let Agencies=await User.findById(x.agencyid)
+    let adv=await adventureagency.findById(x.adventureid)
     responseData.push({
         package:x,
-        agency:Agencies
+        agency:Agencies,
+        adv:adv
     })
  }
     res.json(responseData)

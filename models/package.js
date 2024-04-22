@@ -30,6 +30,9 @@ transports: [{
     price:{
         type:Number,
     },
+    imgvehicle:{
+        type:String,
+    },
 }],
 destination:[{
 
@@ -43,6 +46,15 @@ destination:[{
         type:String
     },
 }],
+defaultvehicle:{
+    type:String,
+},
+vehicleimage:{
+    type:String,
+},
+noofpeople:{
+    type:Number,
+},
 noOfDays:{
     type:String,
 },
@@ -62,6 +74,14 @@ resortId:[{
     type:mongoose.Types.ObjectId,
     ref:User
 
+}],
+defaulthotelId:{
+    type:mongoose.Types.ObjectId,
+    ref:User
+},
+defaultadventureId:[{
+    type:mongoose.Types.ObjectId,
+    ref:adventureagency
 }],
 
 

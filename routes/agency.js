@@ -15,7 +15,7 @@ import reviewuser from "../models/review.js";
 
 const router=express.Router()
 
-router.post('/package', upload.fields([{ name: 'coverImage' }, { name: 'uploadBrochure' }]), async (req, res) => {
+router.post('/package', upload.fields([{ name: 'coverImage' }, { name: 'uploadBrochure' },{name:'vehicleimage'}]), async (req, res) => {
     try {
         let packageData = { ...req.body }; // Copy req.body to packageData
 
@@ -28,6 +28,10 @@ router.post('/package', upload.fields([{ name: 'coverImage' }, { name: 'uploadBr
         if (req.files['uploadBrochure']) {
             const brochure = req.files['uploadBrochure'][0].filename;
             packageData.uploadBrochure = brochure; // Add uploadBrochure to packageData
+        }
+        if (req.files['vehicleimage']) {
+            const vehicle = req.files['vehicleimage'][0].filename;
+            packageData.uploadBrochure = vehicle; // Add vehicle to packageData
         }
 
         console.log("Package Data:", packageData); // Log packageData for debugging
@@ -92,7 +96,7 @@ router.put('/adventureupdate/:id', upload.single('image'), async (req, res) => {
 
 
 router.get('/findresort',async(req,res)=>{
-    let response=await User.find({userType:'resort'})
+    let response=await User.find({userType:'resort',status:'accepted'})
     res.json(response)
     console.log(response)
 })
@@ -141,8 +145,12 @@ router.get('/detailvwpkg/:id',async(req,res)=>{
     let id=req.params.id
     console.log(id)
     let response=await packageagency.findById(id)
-    res.json(response)
+    let hotelid=await User.findById(response.defaulthotelId)
+    let defaultadv=await adventureagency.findById(response.defaultadventureId)
+    res.json({response,hotelid, defaultadv})
     console.log(response);
+    console.log('hoteldefault',hotelid);
+    console.log("advdefault",defaultadv);
 })
 
 router.get('/vwagencyprofile/:id',async(req,res)=>{
@@ -300,6 +308,15 @@ router.put('/addresortToPackage/:id', async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+router.put('/adddefaulthotel/:id',async(req,res)=>{
+    let id=req.params.id
+    console.log(id);
+    console.log(req.body);
+    let response=await packageagency.findByIdAndUpdate(id,req.body)
+    console.log(response);
+    res.json(response)
+})
+
 
    
     router.put('/addAdventuretoPackage/:id', async (req, res) => {
@@ -327,6 +344,31 @@ router.put('/addresortToPackage/:id', async (req, res) => {
             res.status(500).send("Internal Server Error");
         }
     });
+
+    router.put('/adddefaultadventure/:id', async (req, res) => {
+    try {
+
+        // Extract ID from URL parameters
+        let id = req.params.id;
+        
+        // Update the document in the database
+        let updatedPackage = await packageagency.findByIdAndUpdate(
+            id,
+            { $set: { defaultadventureId: req.body.defaultadventureId } },
+            { new: true }
+        );
+        
+        // Log the updated document
+        console.log(updatedPackage);
+        
+        // Send the updated document as response
+        res.json(updatedPackage);
+    } catch (error) {
+        // Handle errors
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
     
 
     router.get('/viewPackageResort/:id',async(req,res)=>{
