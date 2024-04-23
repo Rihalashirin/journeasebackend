@@ -13,6 +13,7 @@ import booking from "../models/booking.js";
 import resortenquire from "../models/resort.js";
 import reviewuser from "../models/review.js";
 
+
 const router=express.Router()
 
 router.post('/package', upload.fields([{ name: 'coverImage' }, { name: 'uploadBrochure' },{name:'vehicleimage'}]), async (req, res) => {
@@ -31,7 +32,7 @@ router.post('/package', upload.fields([{ name: 'coverImage' }, { name: 'uploadBr
         }
         if (req.files['vehicleimage']) {
             const vehicle = req.files['vehicleimage'][0].filename;
-            packageData.uploadBrochure = vehicle; // Add vehicle to packageData
+            packageData.vehicleimage = vehicle; // Add vehicle to packageData
         }
 
         console.log("Package Data:", packageData); // Log packageData for debugging
@@ -104,8 +105,8 @@ router.get('/detailvwresort/:id',async(req,res)=>{
     let id=req.params.id
     console.log(id)
     let response=await User.findById(id)
-    let rooms=await room.find({resortid: response._id})
-    let facilities=await Facility.find({resortid:response._id})
+    let rooms=await room.findOne({resortid: response._id})
+    let facilities=await Facility.findOne({resortid:response._id})
 
     res.json({response,rooms,facilities})
     console.log(response)
@@ -145,12 +146,23 @@ router.get('/detailvwpkg/:id',async(req,res)=>{
     let id=req.params.id
     console.log(id)
     let response=await packageagency.findById(id)
+    let responseData=[]
     let hotelid=await User.findById(response.defaulthotelId)
-    let defaultadv=await adventureagency.findById(response.defaultadventureId)
-    res.json({response,hotelid, defaultadv})
-    console.log(response);
-    console.log('hoteldefault',hotelid);
-    console.log("advdefault",defaultadv);
+        for (a of response.defaultadventureId){
+            let adventure=await User.findById(a)
+            responseData.push({
+                adventure:adventure
+            })
+
+        }
+        responseData.push({
+            response:response,
+            defaultHotel:hotelid
+
+        })
+      
+    res.json(responseData)
+
 })
 
 router.get('/vwagencyprofile/:id',async(req,res)=>{
@@ -312,6 +324,10 @@ router.put('/adddefaulthotel/:id',async(req,res)=>{
     let id=req.params.id
     console.log(id);
     console.log(req.body);
+    let hotel=await User.findById(req.body.defaulthotelId)
+    let rooms=await room.findOne({resortid:hotel?._id})
+    let defaultRoomPrice=rooms.standardPrice
+    req.body={...req.body,defaulthotelprice:defaultRoomPrice}
     let response=await packageagency.findByIdAndUpdate(id,req.body)
     console.log(response);
     res.json(response)

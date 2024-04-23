@@ -30,7 +30,7 @@ transports: [{
     price:{
         type:Number,
     },
-    imgvehicle:{
+    transportImage:{
         type:String,
     },
 }],
@@ -48,6 +48,15 @@ destination:[{
 }],
 defaultvehicle:{
     type:String,
+},
+defaultvehicleprice:{
+    type:Number,
+},
+defaultadventureprice:{
+    type:Number,
+},
+defaulthotelprice:{
+    type:Number,
 },
 vehicleimage:{
     type:String,
