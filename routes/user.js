@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import  User  from "../models/user.js";
 const router= express.Router()
 import { upload } from '../multer.js'
@@ -116,10 +116,22 @@ router.get('/detailvwpackage/:id',async(req,res)=>{
     console.log(id);
     let response=await packageagency.findById(id)
     let agency=await User.findById(response.agencyid)
+    let defaulthotel=await User.findById(response.defaulthotelId)
+    let responseData=[]
+    for (const x of response.defaultadventureId)   {
+        let adventuredefault=await adventureagency.findById(x)
+        responseData.push({
+            pkg:response,
+            defaultadventure:adventuredefault,
+            agency:agency,
+            defaulthotel:defaulthotel
+        })
+       
     
+    }
     
-    console.log(response,agency);
-    res.json({response,agency})
+    console.log(responseData);
+    res.json(responseData)
 })
 
 router.get('/detailvwagency/:id',async(req,res)=>{

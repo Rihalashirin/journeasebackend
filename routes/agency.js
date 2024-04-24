@@ -148,8 +148,9 @@ router.get('/detailvwpkg/:id',async(req,res)=>{
     let response=await packageagency.findById(id)
     let responseData=[]
     let hotelid=await User.findById(response.defaulthotelId)
-        for (a of response.defaultadventureId){
-            let adventure=await User.findById(a)
+        for (let a of response.defaultadventureId){
+            console.log(a,'--------------------');
+            let adventure=await adventureagency.findById(a)
             responseData.push({
                 adventure:adventure
             })
@@ -259,12 +260,16 @@ router.post('/enquireguide',async(req,res)=>{
     
 })
 
-router.put('/editpackage/:id',upload.fields([{name:'coverImage'}]),async(req,res)=>{
+router.put('/editpackage/:id',upload.fields([{name:'coverImage'},{name:'vehicleimage'}]),async(req,res)=>{
     try{
         if(req.files['coverImage']){
             const img = req.files['coverImage'][0].filename;
             console.log(img)
             req.body={...req.body,coverImage:img}
+        }
+        if (req.files['vehicleimage']) {
+            const vehicle = req.files['vehicleimage'][0].filename;
+            packageData.vehicleimage = vehicle; // Add vehicle to packageData
         }
         let id=req.params.id
         console.log(req.body)
