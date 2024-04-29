@@ -549,10 +549,11 @@ router.put('/adddefaulthotel/:id',async(req,res)=>{
             let responseData=[]
             for (const newresponse of response2) {
                 let response=await booking.find({packageid:newresponse?._id})
-                console.log(response,'-----------------');
+                console.log(response,'----------ghjhv-------');
                 for(const book of response) {
 
                 let reviews=await reviewuser.find({bookingid:book?._id})
+                console.log(reviews,'12222222222222222');
                 for(let x of reviews) {
 
                 let bookings=await booking.findById(x?.bookingid)
@@ -568,7 +569,7 @@ router.put('/adddefaulthotel/:id',async(req,res)=>{
         }
     }
 
-            
+            console.log(responseData,'==============================-09iuhbv');
             res.json(responseData)
             
         

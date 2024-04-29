@@ -1,6 +1,9 @@
 import express from "express";
 import  User  from "../models/user.js";
 import packageagency from "../models/package.js";
+import booking from "../models/booking.js";
+import reviewuser from "../models/review.js";
+import reviewresorts from "../models/resortreview.js";
 const router= express.Router()
 
 router.get('/vwagency',async(req,res)=>{
@@ -62,6 +65,33 @@ router.get('/vwpackage',async(req,res)=>{
     }
     res.json(responseData);
 })
+router.get('/vwbooking',async(req,res)=>{
+    let response=await booking.find()
+    console.log(response);  
+    
+    // let agency =await User.findById(response.agencyid)
+    // console.log(response);
+    // res.json({response,agency});
+    let responseData=[];
+    for(const newresponse of response){
+        let user=await User.findById(newresponse.userId);
+        let pkg=await packageagency.findById(newresponse.packageid);
+        let agency=await User.findById(pkg?.agencyid);
+        let rw=await reviewuser.find({bookingid:newresponse._id})
+        let resrw=await reviewresorts.find({bookingid:newresponse._id})
+
+        responseData.push({
+            agency:agency,
+            package:pkg,
+            user:user,
+            req:newresponse,
+            rw:rw,
+            resrw:resrw,
+        });
+    }
+    res.json(responseData);
+})
+
 
 
 

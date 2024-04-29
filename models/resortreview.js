@@ -1,10 +1,7 @@
 import mongoose, {Schema,model} from "mongoose";
-import packageagency from "./package.js";
 import booking from "./booking.js";
 import User from "./user.js";
-
-
-const reviewSchema=Schema({
+const resortreviewSchema=Schema({
     bookingid:{
         type:mongoose.Types.ObjectId,
         ref:booking
@@ -12,15 +9,19 @@ const reviewSchema=Schema({
    review:{
        type:String,
    },
-   destinationName:{
+   propertyName:{
     type:String,
    },
 
    accomodatn:{
     type:String,
+   },
+   resortId:{
+    type:mongoose.Types.ObjectId,
+    ref:User
    }
 
 
 })
-const reviewuser=model('review',reviewSchema)
-export default reviewuser
+const reviewresorts=model('resortReview',resortreviewSchema)
+export default reviewresorts

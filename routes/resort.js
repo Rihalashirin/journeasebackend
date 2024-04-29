@@ -114,7 +114,7 @@ router.get('/viewfacilityresort/:id',async(req,res)=>{
     
               let pkg=await packageagency.findById(bookings.packageid);
               console.log(pkg);
-              let agnc=await User.findById(pkg.agencyid)
+              let agnc=await User.findById(pkg?.agencyid)
               console.log(agnc);
               responseData.push({
                 bookings:bookings,

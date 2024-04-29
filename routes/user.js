@@ -9,6 +9,7 @@ import adventureagency from "../models/adventure.js";
 import reviewuser from "../models/review.js";
 import resortenquire from "../models/resort.js";
 import guiderequest from "../models/requestguide.js";
+import reviewresorts from "../models/resortreview.js";
 
 
 
@@ -213,8 +214,8 @@ try{
     console.log(response,'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
     let responseData=[];
     for(const newresponse of response){
-        let package1=await packageagency.findById(newresponse.packageid)
-        let agnc=await User.findById(package1.agencyid)
+        let package1=await packageagency.findById(newresponse?.packageid)
+        let agnc=await User.findById(package1?.agencyid)
         console.log(package1,'rrrrrrrrrrrrrrrrrrrrrrrr');
         responseData.push({
             package1:package1,
@@ -256,7 +257,7 @@ router.get('/viewbookigdetail/:id',async(req,res)=>{
                     resorts: resorts,
                     booking: response
                 };
-        
+        // console.log(responseData,'iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
                 res.json(responseData);
 })
 
@@ -269,6 +270,7 @@ router.post('/addreview',async(req,res)=>{
     res.json({message:"review created",savedReview})
 }
 
+
   
 
 catch(e){
@@ -277,10 +279,12 @@ catch(e){
 }
 
 })
+
+
 router.post('/addresortreview',async(req,res)=>{
     try{
       console.log(req.body,'..................');
-      const newReview = new reviewuser(req.body)
+      const newReview = new reviewresorts(req.body)
       const savedReview = await newReview.save()
       console.log(savedReview);
       res.json({message:"review created",savedReview})
