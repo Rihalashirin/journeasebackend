@@ -12,6 +12,8 @@ import mongoose from "mongoose";
 import booking from "../models/booking.js";
 import resortenquire from "../models/resort.js";
 import reviewuser from "../models/review.js";
+import Issue from "../models/issues.js";
+import imagesguide from "../models/image.js";
 
 
 const router=express.Router()
@@ -228,7 +230,7 @@ router.get('/findadventure',async(req,res)=>{
 
 router.get('/findguide',async(req,res)=>{
     console.log(req.body)
-    let response=await User.find()
+    let response=await User.find({userType:"guide"})
     console.log(response)
     res.json(response)
 })
@@ -244,20 +246,34 @@ router.get('/detailguide/:id',async(req,res)=>{
         res.json(e)
     }
 })
-router.post('/enquireguide',async(req,res)=>{
+router.post('/enquireguide/:id',async(req,res)=>{
     try{
         let id=req.params.id    
-        console.log(req.body)
+        console.log(req.body.wage)
         const newRequestguide= new guiderequest(req.body)
         const savedRequestguide= await newRequestguide.save()
+    let response=await booking.findByIdAndUpdate(id,req.body)
+    console.log(response,'========================');
+
         res.json({message: "enquire guide",savedRequestguide})
     }
     catch(e){
         res.json(e.message)
 
     }
-
     
+   
+    
+})
+
+
+
+
+router.put('/enterwage/:id',async(req,res)=>{
+    let id=req.params.id
+    console.log(req.body);
+    let response=await booking.findByIdAndUpdate(id,req.body.wage)
+    console.log(response);
 })
 
 router.put('/editpackage/:id',upload.fields([{name:'coverImage'},{name:'vehicleimage'}]),async(req,res)=>{
@@ -416,6 +432,7 @@ router.put('/adddefaulthotel/:id',async(req,res)=>{
         }
     })
 
+
     router.get('/viewPackageAdventure/:id',async(req,res)=>{
         try{
         let id=req.params.id
@@ -500,11 +517,17 @@ router.put('/adddefaulthotel/:id',async(req,res)=>{
         
                 let user = await User.findById(response.userId);
                 let packageDetail = await packageagency.findById(response.packageid);
-        
+                 let hoteldefault=await User.findById(packageDetail.defaulthotelId);
+
                 let adventures = [];
                 for (const ad of response.adventureId) {
                     let adventure = await adventureagency.findById(ad);
                     adventures.push(adventure);
+                }
+                let defaultadventures=[];
+                for (const deadv of packageDetail.defaultadventureId) {
+                  let defaultadventure = await adventureagency.findById(deadv);
+                  defaultadventures.push(defaultadventure)
                 }
         
                 let resorts = [];
@@ -518,7 +541,9 @@ router.put('/adddefaulthotel/:id',async(req,res)=>{
                     package: packageDetail,
                     adventures: adventures,
                     resorts: resorts,
-                    booking: response
+                    booking: response,
+                    defaultadventures:defaultadventures,
+                    hoteldefaultt:hoteldefault
                 };
         
                 res.json(responseData);
@@ -528,12 +553,55 @@ router.put('/adddefaulthotel/:id',async(req,res)=>{
         });
         
 
+        router.get('/vwguideuploads/:id',async(req,res)=>{
+            try{
+                let id=req.params.id
+                console.log(id)
+                
+                let response=await packageagency.find({agencyid:id})
+                console.log(response,'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
+                let responseData=[];
+                for(const newresponse of response){
+                    let bookings=await booking.find({packageid:newresponse._id})
+                    for(const b of bookings){
+                        let user=await User.findById(b.guideid)
+                        let issue=await Issue.find({bookingid:b._id})
+                        console.log(bookings,'rrrrrrrrrrrrrrrrrrrrrrrr');
+                        responseData.push({
+                            booking:b,
+                            pkg:newresponse,
+                            user:user,
+                            issue:issue
+                        })
+                    }
+                }
+                console.log(responseData)
+                res.json(responseData)
+            
+            }
+            catch(e){
+                console.log(e);
+                res.json(e.message)
+            
+            }
+            })
+
         router.put('/managebooking/:id',async(req,res)=>{
             let id=req.params.id
             console.log(id);
             console.log(req.body);
             let response=await booking.findByIdAndUpdate(id,req.body)
             console.log(response);
+        })
+
+        router.get('/imageguide/:id',async(req,res)=>{
+            let id=req.params.id
+            console.log(id);
+            let response=await imagesguide.find({bookingid:id})
+            console.log(response);
+            res.json(response)
+            
+        
         })
 
         // router.put('/assignhealth/:id',async(req,res)=>{
@@ -574,5 +642,28 @@ router.put('/adddefaulthotel/:id',async(req,res)=>{
             
         
         })
+        router.delete('/deleteaddedresort/:id',async(req,res)=>{
+            let id=req.params.id
+            let response=await Hiringpreviouswork.findByIdAndDelete(id)
+        })
+
+        router.delete('/deletepkg/:id', async (req, res) => {
+            try {
+                const id = req.params.id;
+                // Delete the package
+                await packageagency.findByIdAndDelete(id);
+                
+                // Delete associated bookings
+                await booking.deleteMany({ packageid: id });
+        
+                // Send a success response
+                res.status(200).json({ message: 'Package and associated data deleted successfully' });
+            } catch (error) {
+                // Handle errors
+                console.error('Error deleting package:', error);
+                res.status(500).json({ error: 'An error occurred while deleting the package' });
+            }
+        });
+        
 
 export default router

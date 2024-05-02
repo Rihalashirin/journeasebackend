@@ -7,6 +7,7 @@ import resortenquire from "../models/resort.js";
 import booking from "../models/booking.js";
 import packageagency from "../models/package.js";
 import adventureagency from "../models/adventure.js";
+import reviewresorts from "../models/resortreview.js";
 const router=express()
 
 router.post('/facilities',async(req,res)=>{
@@ -163,6 +164,12 @@ router.get('/viewfacilityresort/:id',async(req,res)=>{
             console.log(response,response2);
         }
         console.log(response);
+        res.json(response)
+    })
+    router.get('/vwreviews/:id',async(req,res)=>{
+        console.log(req.body)
+        let response=await reviewresorts.find()
+        console.log(response)
         res.json(response)
     })
 

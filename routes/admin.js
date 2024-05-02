@@ -76,6 +76,7 @@ router.get('/vwbooking',async(req,res)=>{
     for(const newresponse of response){
         let user=await User.findById(newresponse.userId);
         let pkg=await packageagency.findById(newresponse.packageid);
+        let resort=await User.findById(newresponse.resortId)
         let agency=await User.findById(pkg?.agencyid);
         let rw=await reviewuser.find({bookingid:newresponse._id})
         let resrw=await reviewresorts.find({bookingid:newresponse._id})
@@ -87,6 +88,7 @@ router.get('/vwbooking',async(req,res)=>{
             req:newresponse,
             rw:rw,
             resrw:resrw,
+            resort:resort
         });
     }
     res.json(responseData);

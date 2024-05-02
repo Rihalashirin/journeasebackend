@@ -114,12 +114,7 @@ router.get('/vwdetailbooking/:id', async(req,res)=>{
     res.json({response,bookings,usr,package1,resort,adv})
 }
 })
-router.put('/enterwage',async(req,res)=>{
-    let id=req.params.id
-    console.log(req.body);
-    let response=await booking.findByIdAndUpdate(id,req.body)
-    console.log(response);
-})
+
 
 
 router.put('/managebooking/:id',async(req,res)=>{

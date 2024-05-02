@@ -80,6 +80,7 @@ const booktripSchema=new Schema({
     },
     wage:{
         type:Number,
+        default:0
     },
     roomid:{
         type:mongoose.Types.ObjectId,
