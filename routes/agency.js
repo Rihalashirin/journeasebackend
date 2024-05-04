@@ -98,11 +98,27 @@ router.put('/adventureupdate/:id', upload.single('image'), async (req, res) => {
 
 
 
-router.get('/findresort',async(req,res)=>{
-    let response=await User.find({userType:'resort',status:'accepted'})
-    res.json(response)
-    console.log(response)
-})
+router.get('/findresort/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        console.log(id);
+
+        // Fetch default hotel ID from the package
+        const pkg = await packageagency.findById(id);
+        const defaultHotelId = pkg.defaulthotelId;
+
+        // Find all accepted resorts except the default hotel
+        const response = await User.find({ userType: 'resort', status: 'accepted', _id: { $ne: defaultHotelId } });
+        
+        console.log(pkg, 'hhhh');
+        res.json(response);
+        console.log(response,'jjjjjj');
+    } catch (error) {
+        console.error('Error fetching resort data:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 router.get('/detailvwresort/:id',async(req,res)=>{
     let id=req.params.id
     console.log(id)

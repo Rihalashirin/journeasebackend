@@ -143,6 +143,30 @@ router.get('/detailvwagency/:id',async(req,res)=>{
     console.log(response);
     res.json(response) 
 })
+router.get('/vwreview/:id',async(req,res)=>{
+    let id=req.params.id
+    console.log(id);
+    let responseData=[]
+    let pkg=await packageagency.find({agencyid:id})
+    for (const x of pkg){
+        let bookingg=await booking.find({packageid:x._id})
+        for (const y of bookingg){
+            let review=await reviewuser.find({bookingid:y._id})
+            let user=await User.findById(y.userId)
+            responseData.push({
+               pkg:x,
+               review:review,
+               user:user,
+               booking:y,
+
+            })
+        }
+    }
+    
+    console.log(responseData);
+    res.json(responseData)
+    
+})
 
 
 

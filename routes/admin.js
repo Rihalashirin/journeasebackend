@@ -4,7 +4,46 @@ import packageagency from "../models/package.js";
 import booking from "../models/booking.js";
 import reviewuser from "../models/review.js";
 import reviewresorts from "../models/resortreview.js";
-const router= express.Router()
+import nodemailer from 'nodemailer'
+const router=express()
+
+
+
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'journeaseproject@gmail.com',
+    pass: 'uqzi zaaj ndxn psek',
+  },
+});
+
+router.post('/sendOTP', async (req, res) => {
+  const { email } = req.body;
+  const otp = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
+  const mailOptions = {
+    from: 'journeaseproject@gmail.com',
+    to: email,
+    subject: 'Your OTP for Verification',
+    text: `Your OTP is: ${otp}`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).send({ message: 'OTP sent successfully',otp });
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+    res.status(500).send({ error: 'Failed to send OTP' });
+  }
+});
+router.put('/changepass/:email',async(req,res)=>{
+    let email=req.params.email
+    let response=await User.findOne({email:email})
+    console.log(response);
+    let response1=await User.findByIdAndUpdate(response._id, req.body,{new:true})
+    console.log(req.body); 
+    console.log(response1);
+})
 
 router.get('/vwagency',async(req,res)=>{
     let vwagency=await User.find({userType:'agency'})

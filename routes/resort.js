@@ -90,14 +90,16 @@ router.get('/viewfacilityresort/:id',async(req,res)=>{
     router.get('/viewfacility/:id',async(req,res)=>{
         let id=req.params.id
         console.log(id);
-        let response=await Facility.find({resortid:id})
+        let response=await Facility.findById(id)
         console.log(response);
         res.json(response)
         })
+
     router.put('/editfacility/:id',async(req,res)=>{
         let id=req.params.id
         console.log(req.body)
         let response=await Facility.findByIdAndUpdate(id,req.body) 
+        console.log(response,'-----------------------');
         res.json(response)
 
     })
@@ -167,10 +169,23 @@ router.get('/viewfacilityresort/:id',async(req,res)=>{
         res.json(response)
     })
     router.get('/vwreviews/:id',async(req,res)=>{
-        console.log(req.body)
-        let response=await reviewresorts.find()
-        console.log(response)
-        res.json(response)
+        let id=req.params.id
+        console.log('----------------------------',id)
+        let response=await reviewresorts.find({resortId:id})
+        let responseData=[]
+        for (const x of response){
+        let bookingg=await booking.findById(x.bookingid)
+        let user=await User.findById(bookingg.userId)
+            responseData.push({
+                booking:bookingg,
+                user:user,
+                req:x
+            })
+            
+        }
+        
+        console.log(responseData);
+        res.json(responseData)
     })
 
 export default router
