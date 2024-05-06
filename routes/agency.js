@@ -200,13 +200,13 @@ router.put('/agencyeditprofile/:id',upload.fields([{ name: 'licenseProof'}, { na
             
             let coverimage =req.files['licenseProof'][0].filename
             console.log(coverimage);
-            req.body={...req.body,coverImage:coverimage}
+            req.body={...req.body,licenseProof:coverimage}
         }
         if(req.files['companyLogo']){
 
             let brochure =  req.files['companyLogo'][0].filename 
            
-            req.body={...req.body,uploadBrochure:brochure}
+            req.body={...req.body,companyLogo:brochure}
         }
         if(req.files['idProof']){
 
@@ -227,7 +227,7 @@ router.put('/agencyeditprofile/:id',upload.fields([{ name: 'licenseProof'}, { na
             req.body={...req.body,coverImage:coverimage}
         }
 
-        let response=await User.findByIdAndUpdate(id,req.body)
+        let response=await User.findByIdAndUpdate(id,req.body,{new:true})
         // console.log(response);
     }
     catch(e){
@@ -242,6 +242,14 @@ router.get('/findadventure',async(req,res)=>{
     console.log(response)
     res.json(response)
     
+})
+router.get('/adventure/:id',async(req,res)=>{
+    console.log(req.body);
+    let id=req.params.id
+    let response=await adventureagency.findById(id)
+    console.log(response)
+    res.json(response)
+
 })
 
 router.get('/findguide',async(req,res)=>{
