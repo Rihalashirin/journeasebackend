@@ -57,6 +57,8 @@ router.post('/adventureadd',upload.single('image'),async(req,res)=>{
     res.json({message:"adventure created",data:savedPackage})
 
 })
+
+
 router.put('/adventureupdate/:id', upload.single('image'), async (req, res) => {
     try {
         const adventureId = req.params.id;
@@ -82,18 +84,18 @@ router.put('/adventureupdate/:id', upload.single('image'), async (req, res) => {
 });
 
 
-// router.post('/adddestination',async(req,res)=>{
-//     try{
+router.post('/quiz',async(req,res)=>{
+    try{
 
-//     console.log(req.body);
-//     const newDestination = new destinationadd(req.body)
-//     const savedDestination = await newDestination.save()
-//     res.json({message:"issue created",savedDestination})
-// }
-// catch(e){
-//     res.json(e.message)
-// }
-// })
+    console.log(req.body);
+    const newDestination = new adventureagency(req.body)
+    const savedDestination = await newDestination.save()
+    res.json({message:"issue created",savedDestination})
+}
+catch(e){
+    res.json(e.message)
+}
+})
 
 
 
@@ -236,11 +238,23 @@ router.put('/agencyeditprofile/:id',upload.fields([{ name: 'licenseProof'}, { na
     })
     
 
-router.get('/findadventure',async(req,res)=>{
+router.get('/findadventure/:id',async(req,res)=>{
+    let id=req.params.id
+
     console.log(req.body)
-    let response=await  adventureagency.find()
-    console.log(response)
-    res.json(response)
+    let pkg=await packageagency.findById(id)
+    console.log(pkg,'---');
+    let responseData=[]
+    for (let x of pkg.defaultadventureId){
+        
+        let response=await  adventureagency.find( { _id:{$ne:x}})
+        console.log(response,"ll");
+        responseData=response 
+    }
+    
+
+    // console.log(response)
+    res.json(responseData)
     
 })
 router.get('/adventure/:id',async(req,res)=>{
@@ -254,7 +268,7 @@ router.get('/adventure/:id',async(req,res)=>{
 
 router.get('/findguide',async(req,res)=>{
     console.log(req.body)
-    let response=await User.find({userType:"guide"})
+    let response=await User.find({userType:"guide", status:"accepted"})
     console.log(response)
     res.json(response)
 })
@@ -670,6 +684,30 @@ router.put('/adddefaulthotel/:id',async(req,res)=>{
             let id=req.params.id
             let response=await Hiringpreviouswork.findByIdAndDelete(id)
         })
+
+        router.delete("/removeHotel/:packageId/:resortId", async (req, res) => {
+            try {
+              const packageId = req.params.packageId;
+              const resortId = req.params.resortId;
+          
+              // Find the package by ID and update it to remove the resortId from the resortId array
+              const packages = await packageagency.findByIdAndUpdate(
+                packageId,
+                { $pull: { resortId: resortId } },
+                { new: true }
+              );
+          
+              if (!packages) {
+                return res.status(404).json({ message: "Package not found" });
+              }
+          
+              res.status(200).json({ message: "Hotel removed from package successfully" });
+            } catch (error) {
+              console.error("Error removing hotel:", error);
+              res.status(500).json({ message: "Internal server error" });
+            }
+          });
+          
 
         router.delete('/deletepkg/:id', async (req, res) => {
             try {

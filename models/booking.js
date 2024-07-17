@@ -41,7 +41,8 @@ const booktripSchema=new Schema({
     },
    
     health:{
-        type:String
+        type:String,
+        default:'no'
     },
    
     experience:{
@@ -53,7 +54,8 @@ const booktripSchema=new Schema({
     },
    
     guide:{
-        type:String
+        type:String,
+        default:'yes'
     },
     adult:{
         type:Number

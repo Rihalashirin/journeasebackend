@@ -75,25 +75,26 @@ router.post('/registration',upload.fields([{name:'idProof'},{name:'licenseProof'
 
     
 })
-// router.post('/login',async(req,res)=>{
-//     console.log(req.body);
-//     let users=await User.findOne(req.body)
-//     console.log(users);
-//     res.json(users)
-// })
 router.post('/login',async(req,res)=>{
     console.log(req.body);
-    let user=await User.findOne(req.body)
-    console.log(user);
-    res.json(user)
+    let users=await User.findOne(req.body)
+    console.log(users);
+    res.json(users)
 })
+ 
 router.post('/api/auth/authenticate',async (req,res)=>{
     console.log(req.body);
     let response=await  User.findOne(req.body)
     console.log(response);
     res.json(response)
 })
-
+router.get('/welcomename/:id',async(req,res)=>{
+    let id=req.params.id
+    console.log(id,'----');
+    let user=await User.findById(id)
+    console.log(user,'9999');
+    res.json(user)
+})
 
 
 router.get('/findpackage',async(req,res)=>{
@@ -261,6 +262,8 @@ router.get('/viewbookigdetail/:id',async(req,res)=>{
     console.log(id);
     let response=await booking.findById(id)
     let packageDetail = await packageagency.findById(response.packageid);
+    let defaulthotel=await User.findById(packageDetail.defaulthotelId)
+    let defaultadventure=await adventureagency.findById(packageDetail.defaultadventureId)
 
     let adventures = [];
                 for (const ad of response.adventureId) {
@@ -279,7 +282,9 @@ router.get('/viewbookigdetail/:id',async(req,res)=>{
                     package: packageDetail,
                     adventures: adventures,
                     resorts: resorts,
-                    booking: response
+                    booking: response,
+                    defaulthotel: defaulthotel,
+                    defaultadventure: defaultadventure,
                 };
         // console.log(responseData,'iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
                 res.json(responseData);
@@ -289,13 +294,12 @@ router.post('/addreview',async(req,res)=>{
   try{
     console.log(req.body,'..................');
     const newReview = new reviewuser(req.body)
+    
     const savedReview = await newReview.save()
     console.log(savedReview);
     res.json({message:"review created",savedReview})
 }
-
-
-  
+ 
 
 catch(e){
     res.json(e.message)

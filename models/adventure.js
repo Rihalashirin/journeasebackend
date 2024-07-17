@@ -21,6 +21,13 @@ const adventureSchema=Schema({
     location:{
         type:String,
     },
+    question:{
+        type:String,
+    },
+    answer:{
+        type:String,
+    }
+
 
 })
 const adventureagency=model('adventure',adventureSchema)
