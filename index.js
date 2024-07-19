@@ -14,7 +14,7 @@ const app=express()
 app.use(cors());
 app.use(express.json({limit:"50mb"}));
 
-mongoose.connect('mongodb://127.0.0.1:27017/journease')
+mongoose.connect('mongodb+srv://rihala345:3WneQ26XWraWHHSs@cluster0.vdvpqxw.mongodb.net/journease')
   .then(() => console.log('Connected!'));
 
 // api
